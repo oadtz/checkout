@@ -14,10 +14,10 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0",
-    "illuminate/config": "5.2.*",
+    "php": ">=7.0.0",
     "adyen/php-api-library": "^1.5",
-    "braintree/braintree_php": "^3.36"
+    "braintree/braintree_php": "^3.36",
+    "illuminate/config": "^5.7"
   },
   "require-dev": {
     "phpunit/phpunit": "4.*",
