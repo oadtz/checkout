@@ -1,24 +1,19 @@
 <?php
 
-namespace Nextpack\Nextpack;
+namespace Oadtz\Checkout;
 
-/**
- * Class Sample
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
-class Sample
+class Checkout
 {
 
     /**
-     * @var  \Nextpack\Nextpack\Config
+     * @var  \Oadtz\Checkout\Config
      */
     private $config;
 
     /**
      * Sample constructor.
      *
-     * @param \Nextpack\Nextpack\Config $config
+     * @param \Oadtz\Checkout\Config $config
      */
     public function __construct(Config $config)
     {

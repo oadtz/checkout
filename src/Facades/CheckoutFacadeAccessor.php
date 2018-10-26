@@ -1,15 +1,10 @@
 <?php
 
-namespace Nextpack\Nextpack\Facades;
+namespace Oadtz\Checkout\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-/**
- * Class SampleFacadeAccessor
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
-class SampleFacadeAccessor extends Facade
+class CheckoutFacadeAccessor extends Facade
 {
 
     /**
@@ -19,6 +14,6 @@ class SampleFacadeAccessor extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'nextpack.sample';
+        return 'checkout.sample';
     }
 }

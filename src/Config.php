@@ -1,22 +1,17 @@
 <?php
 
-namespace Nextpack\Nextpack;
+namespace Oadtz\Checkout;
 
 use Illuminate\Config\Repository;
-use Nextpack\Nextpack\Exceptions\ConfigFileNotFoundException;
+use Oadtz\Checkout\Exceptions\ConfigFileNotFoundException;
 
-/**
- * Class Config
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
 class Config
 {
 
     /**
      * Config file name
      */
-    CONST CONFIG_FILE_NAME = "nextpack";
+    CONST CONFIG_FILE_NAME = "checkout";
 
     /**
      * @var  \Illuminate\Config\Repository
@@ -32,7 +27,7 @@ class Config
     {
         $configPath = $this->configurationPath();
 
-        $config_file = $configPath . '/' . self::CONFIG_FILE_NAME . '.php';
+        $config_file = $configPath . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME . '.php';
 
         if (!file_exists($config_file)) {
             throw new ConfigFileNotFoundException();

@@ -1,18 +1,13 @@
 <?php
 
-namespace Nextpack\Nextpack\ServiceProviders;
+namespace Oadtz\Checkout\ServiceProviders;
 
 use Illuminate\Support\ServiceProvider;
-use Nextpack\Nextpack\Contracts\SampleInterface;
-use Nextpack\Nextpack\Facades\SampleFacadeAccessor;
-use Nextpack\Nextpack\Sample;
+use Oadtz\Checkout\Contracts\CheckoutInterface;
+use Oadtz\Checkout\Facades\CheckoutFacadeAccessor;
+use Oadtz\Checkout\Checkout;
 
-/**
- * Class NextpackServiceProvider
- *
- * @author  Mahmoud Zalt  <mahmoud@zalt.me>
- */
-class NextpackServiceProvider extends ServiceProvider
+class CheckoutServiceProvider extends ServiceProvider
 {
 
     /**
@@ -70,8 +65,8 @@ class NextpackServiceProvider extends ServiceProvider
     private function implementationBindings()
     {
         $this->app->bind(
-            SampleInterface::class,
-            Sample::class
+            CheckoutInterface::class,
+            Checkout::class
         );
     }
 
@@ -82,7 +77,7 @@ class NextpackServiceProvider extends ServiceProvider
     {
         // When users execute Laravel's vendor:publish command, the config file will be copied to the specified location
         $this->publishes([
-            __DIR__ . '/Config/nextpack.php' => config_path('nextpack.php'),
+            __DIR__ . '/Config/checkout.php' => config_path('checkout.php'),
         ]);
     }
 
@@ -92,14 +87,13 @@ class NextpackServiceProvider extends ServiceProvider
     private function facadeBindings()
     {
         // Register 'nextpack.say' instance container
-        $this->app['nextpack.sample'] = $this->app->share(function ($app) {
-            return $app->make(Sample::class);
+        $this->app['checkout.sample'] = $this->app->share(function ($app) {
+            return $app->make(Checkout::class);
         });
 
-        // Register 'Sample' Alias, So users don't have to add the Alias to the 'app/config/app.php'
         $this->app->booting(function () {
             $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-            $loader->alias('Sample', SampleFacadeAccessor::class);
+            $loader->alias('Checkout', CheckoutFacadeAccessor::class);
         });
     }
 

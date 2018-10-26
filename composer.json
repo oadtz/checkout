@@ -1,37 +1,39 @@
 {
-  "name": "nextpack/nextpack",
-  "description": "Nextpack is a PHP Packages Framework (Starter Project)",
+  "name": "oadtz/checkout",
+  "description": "Checkout library using some payment gateway",
   "license": "MIT",
   "keywords": [
-    "NextPack",
-    "Starter"
+    "Oadtz",
+    "Checkout"
   ],
   "authors": [
     {
-      "name": "Mahmoud Zalt",
-      "email": "mahmoud@zalt.me",
-      "homepage": "http://www.zalt.me",
-      "role": "Coffee Maker :)"
+      "name": "Thanapat Pirmphol",
+      "email": "t.pirmphol@gmail.com",
+      "homepage": "https://www.oadtz.com"
     }
   ],
   "require": {
     "php": ">=5.4.0",
-    "illuminate/config": "5.2.*"
+    "illuminate/config": "5.2.*",
+    "adyen/php-api-library": "^1.5",
+    "braintree/braintree_php": "^3.36"
   },
   "require-dev": {
     "phpunit/phpunit": "4.*",
     "mockery/mockery": "0.*",
-    "symfony/var-dumper": "2.*"
+    "symfony/var-dumper": "2.*",
+    "fzaninotto/faker": "^1.8"
   },
   "autoload": {
     "psr-4": {
-      "Nextpack\\Nextpack\\": "src",
-      "Nextpack\\Library\\": "src/library"
+      "Oadtz\\Checkout\\": "src",
+      "Oadtz\\Library\\": "src/library"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Nextpack\\Nextpack\\Tests\\": "tests"
+      "Oadtz\\Checkout\\Tests\\": "tests"
     }
   },
   "scripts": {

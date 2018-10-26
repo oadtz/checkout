@@ -1,26 +1,19 @@
 <?php
 
-namespace Nextpack\Nextpack\Tests;
+namespace Oadtz\Checkout\Tests;
 
-use Nextpack\Nextpack\Config;
-use Nextpack\Nextpack\Sample;
+use Oadtz\Checkout\Config;
+use Oadtz\Checkout\Checkout;
 
-/**
- * Class SampleTest
- *
- * @category Test
- * @package  Nextpack\Nextpack\Tests
- * @author   Mahmoud Zalt <mahmoud@zalt.me>
- */
 class SampleTest extends TestCase
 {
 
     public function testSayHello()
     {
         $config = new Config();
-        $sample = new Sample($config);
+        $sample = new Checkout($config);
 
-        $name = 'Mahmoud Zalt';
+        $name = 'Thanapat Pirmphol';
 
         $result = $sample->sayHello($name);
 
