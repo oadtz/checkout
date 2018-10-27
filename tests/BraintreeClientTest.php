@@ -12,6 +12,11 @@ class BraintreeClientTest extends TestCase
     public function setUp ()
     {
         parent::setUp();
+
+        $defaultConfig = Mockery::mock('\Oadtz\Checkout\Interfaces\ConfigInterface');
+        $defaultConfig->shouldReceive('get')
+                      ->andReturn([]);
+        $this->client = new BraintreeClient($defaultConfig, []);
     }
 
     public function testPay()
@@ -41,9 +46,8 @@ class BraintreeClientTest extends TestCase
                     'resultCode'        =>  'Authorised',
                     'authCode'          =>  '56065'
                 ]);
-        $client = new BraintreeClient ($adyenService);
 
-        $result = $client->authorise($paymentData);
+        $result = $this->client->authorise($paymentData);
 
 
         $this->assertInstanceOf(\Oadtz\Checkout\PaymentResult::class, $result);
@@ -63,9 +67,8 @@ class BraintreeClientTest extends TestCase
                     'errorType'         =>  'validation',
                     'pspReference'      =>  '8815405669507360'
                 ]);
-        $client = new BraintreeClient ($adyenService);
 
-        $result = $client->authorise($paymentData);
+        $result = $this->client->authorise($paymentData);
 
         $this->assertInstanceOf(\Oadtz\Checkout\PaymentResult::class, $result);
         $this->assertFalse($result->getSuccess(), 'Success flag should be false.');
@@ -75,9 +78,8 @@ class BraintreeClientTest extends TestCase
         $adyenService->shouldReceive('authorise')
                 ->once()
                 ->andThrow(\Exception::class);
-        $client = new BraintreeClient ($adyenService);
 
         $this->expectException(\Oadtz\Checkout\Exceptions\PaymentFailedException::class);
-        $result = $client->authorise($paymentData);
+        $result = $this->client->authorise($paymentData);
     }
 }

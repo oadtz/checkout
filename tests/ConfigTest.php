@@ -33,7 +33,7 @@ class ConfigTest extends TestCase
     public function testGetAllConfig()
     {
         $input = require $this->config_file;
-        
+
         $this->assertSame ($input, $this->config->get(), 'Should return all config values.');
     }
 

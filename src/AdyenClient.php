@@ -1,19 +1,19 @@
 <?php
 namespace Oadtz\Checkout;
 
-use Oadtz\Checkout\Interfaces\PaymentClientInterface;
+use Oadtz\Checkout\Interfaces\{ConfigInterface, PaymentClientInterface};
 use Oadtz\Checkout\PaymentResult;
 
 class AdyenClient implements PaymentClientInterface {
-    protected $service;
-    protected $paymentData;
+    protected $config, $service, $paymentData;
 
     /**
-     * @param Adyen\Service\Payment $service, array $options
+     * @param ConfigInterface $defaultConfig
+     * @param array $config = []
      */
-    public function __construct (\Adyen\Service\Payment $service)
+    public function __construct (ConfigInterface $defaultConfig, array $config = [])
     {
-        $this->service = $service;
+        $this->config = array_merge($defaultConfig->get('adyen'), $config);
         $this->paymentData = [
             "card"  => [
                 "number"        => null,
@@ -32,6 +32,27 @@ class AdyenClient implements PaymentClientInterface {
                 "card.encrypted.json" =>  null
             ]
         ];
+        
+        // Since this class is tighly coupling to Adyen PHP library
+        // I am initiating these classes here instead of injecting from outside
+        // since this 'AdyenClient' class should handle all initiate connection by itself, and
+        // we would not swap these Adyen classes with other driver
+        $client = new \Adyen\Client();
+        $client->setUsername($config['username']);
+        $client->setPassword($config['password']);
+        $client->setEnvironment($config['environment']);
+        $client->setApplicationName($config['appname']);
+        $this->service = new \Adyen\Service\Payment ($client);
+    }
+
+    /**
+     * For injecting mocked object for unit test
+     * 
+     * @param Adyen\Service\Payment $service
+     */
+    public function setAdyenPaymentService (\Adyen\Service\Payment $service)
+    {
+        $this->service = $service;
     }
 
     /**
