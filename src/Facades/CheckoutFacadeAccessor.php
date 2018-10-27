@@ -1,5 +1,4 @@
 <?php
-
 namespace Oadtz\Checkout\Facades;
 
 use Illuminate\Support\Facades\Facade;
@@ -14,6 +13,6 @@ class CheckoutFacadeAccessor extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'checkout.sample';
+        return 'checkout.checkout';
     }
 }

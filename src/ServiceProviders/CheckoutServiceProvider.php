@@ -3,13 +3,12 @@
 namespace Oadtz\Checkout\ServiceProviders;
 
 use Illuminate\Support\ServiceProvider;
-use Oadtz\Checkout\Contracts\CheckoutInterface;
+use Oadtz\Checkout\Interfaces\CheckoutInterface;
 use Oadtz\Checkout\Facades\CheckoutFacadeAccessor;
 use Oadtz\Checkout\Checkout;
 
 class CheckoutServiceProvider extends ServiceProvider
 {
-
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -86,8 +85,7 @@ class CheckoutServiceProvider extends ServiceProvider
      */
     private function facadeBindings()
     {
-        // Register 'nextpack.say' instance container
-        $this->app['checkout.sample'] = $this->app->share(function ($app) {
+        $this->app['checkout.checkout'] = $this->app->share(function ($app) {
             return $app->make(Checkout::class);
         });
 

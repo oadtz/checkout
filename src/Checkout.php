@@ -1,8 +1,9 @@
 <?php
-
 namespace Oadtz\Checkout;
 
-class Checkout
+use Oadtz\Checkout\Interfaces\{ConfigInterface, CheckoutInterface, PaymentInterface};
+
+class Checkout implements CheckoutInterface
 {
 
     /**
@@ -15,21 +16,21 @@ class Checkout
      *
      * @param \Oadtz\Checkout\Config $config
      */
-    public function __construct(Config $config)
+    public function __construct(ConfigInterface $defaultConfig, array $config)
     {
-        $this->config = $config;
+        $this->config = array_merge($defaultConfig->get(), $config);
     }
 
     /**
-     * @param $name
+     * @param array $paymentData
      *
      * @return  string
      */
-    public function sayHello($name)
+    public function processPayment(PaymentInterface $payment, array $paymentData)
     {
-        $greeting = $this->config->get('greeting');
+        $payment->setConfig($this->config);
 
-        return $greeting . ' ' . $name;
+        return $payment->pay($paymentData);
     }
 
 }

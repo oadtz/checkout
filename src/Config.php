@@ -1,11 +1,10 @@
 <?php
-
 namespace Oadtz\Checkout;
 
-use Illuminate\Config\Repository;
+use Oadtz\Checkout\Interfaces\ConfigInterface;
 use Oadtz\Checkout\Exceptions\ConfigFileNotFoundException;
 
-class Config
+class Config implements ConfigInterface
 {
 
     /**
@@ -25,24 +24,6 @@ class Config
      */
     public function __construct()
     {
-        $configPath = $this->configurationPath();
-
-        $config_file = $configPath . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME . '.php';
-
-        if (!file_exists($config_file)) {
-            throw new ConfigFileNotFoundException();
-        }
-
-        $this->config = new Repository(require $config_file);
-    }
-
-    /**
-     * return the correct config directory path
-     *
-     * @return  mixed|string
-     */
-    private function configurationPath()
-    {
         // the config file of the package directory
         $config_path = __DIR__ . '/Config';
 
@@ -52,7 +33,13 @@ class Config
             $config_path = config_path();
         }
 
-        return $config_path;
+        $config_file = $config_path . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME . '.php';
+
+        if (!file_exists($config_file)) {
+            throw new ConfigFileNotFoundException();
+        }
+
+        $this->config = require $config_file;
     }
 
     /**
@@ -60,8 +47,10 @@ class Config
      *
      * @return  mixed
      */
-    public function get($key)
+    public function get($key = null)
     {
-        return $this->config->get($key);
+        if (!is_null ($key))
+            return $this->config[$key];
+        return $this->config;
     }
 }

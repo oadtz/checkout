@@ -1,7 +1,11 @@
 <?php
 
 return [
-
-    'greeting' => 'hello',
+    'adyen' => [
+        
+    ],
+    'braintree' =>  [
+        
+    ]
 
 ];

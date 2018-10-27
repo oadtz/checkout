@@ -16,14 +16,11 @@
   "require": {
     "php": ">=7.0.0",
     "adyen/php-api-library": "^1.5",
-    "braintree/braintree_php": "^3.36",
-    "illuminate/config": "^5.7"
+    "braintree/braintree_php": "^3.36"
   },
   "require-dev": {
-    "phpunit/phpunit": "4.*",
-    "mockery/mockery": "0.*",
-    "symfony/var-dumper": "2.*",
-    "fzaninotto/faker": "^1.8"
+    "phpunit/phpunit": "^7.4",
+    "mockery/mockery": "^1.2"
   },
   "autoload": {
     "psr-4": {
@@ -39,5 +36,5 @@
   "scripts": {
     "test": "phpunit"
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "stable"
 }
