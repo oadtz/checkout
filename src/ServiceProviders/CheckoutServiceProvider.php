@@ -5,7 +5,7 @@ namespace Oadtz\Checkout\ServiceProviders;
 use Illuminate\Support\ServiceProvider;
 use Oadtz\Checkout\Interfaces\CheckoutInterface;
 use Oadtz\Checkout\Facades\CheckoutFacadeAccessor;
-use Oadtz\Checkout\Checkout;
+use Oadtz\Checkout\{Checkout, CreditCardPayment, AdyenClient, BraintreeClient, Config};
 
 class CheckoutServiceProvider extends ServiceProvider
 {
@@ -63,10 +63,13 @@ class CheckoutServiceProvider extends ServiceProvider
      */
     private function implementationBindings()
     {
-        $this->app->bind(
-            CheckoutInterface::class,
-            Checkout::class
-        );
+        $this->app->bind(CheckoutInterface::class, function ($app) {
+            $adyenClient = new AdyenClient(new Config());
+            $braintreeClient = new BraintreeClient (new Config());
+            $payment = new CreditCardPayment ($adyenClient, $braintreeClient);
+
+            return new Checkout($payment);
+        });
     }
 
     /**
