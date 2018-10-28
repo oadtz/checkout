@@ -16,7 +16,7 @@ Use composer to clone this package.
 
   
 
-Or download this package and extract to your project or add this package name to your composer.json
+Or download this package and extract to your project or add this package to your composer.json
 
   
   
@@ -40,6 +40,21 @@ Or download this package and extract to your project or add this package name to
     $ composer update
 
   
+## Adyen & Braintree Configuration
+Open src/Config/checkout.php file and edit with your own configuration.
+
+    'adyen' => [
+	    'username' => 'Your Adyen username',
+	    'password' => 'Your Adyen password',
+	    'environment' => 'test',
+		'appname' => 'Optional'
+    ],
+    'braintree' => [
+	    'environment' => 'sandbox',
+	    'merchant_id' => 'Your Braintree merchant ID',
+	    'public_key' => 'Your Braintree public API key',
+	    'private_key' => 'Your Braintree private API key'
+    ]
 
 ## Unit test
 
