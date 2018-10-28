@@ -85,14 +85,6 @@ class CheckoutServiceProvider extends ServiceProvider
      */
     private function facadeBindings()
     {
-        $this->app['checkout.checkout'] = $this->app->share(function ($app) {
-            return $app->make(Checkout::class);
-        });
-
-        $this->app->booting(function () {
-            $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-            $loader->alias('Checkout', CheckoutFacadeAccessor::class);
-        });
     }
 
     /**
