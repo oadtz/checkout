@@ -2,11 +2,10 @@
 namespace Oadtz\Checkout;
 
 use Oadtz\Checkout\Interfaces\{ConfigInterface, PaymentClientInterface};
-use Oadtz\Checkout\PaymentResult;
+use Oadtz\Checkout\{PaymentInfo, PaymentResult};
 
 class BraintreeClient implements PaymentClientInterface {
     protected $config, $service;
-    protected $paymentData = [];
 
     /**
      * @param ConfigInterface $defaultConfig
@@ -40,12 +39,21 @@ class BraintreeClient implements PaymentClientInterface {
     }
 
     /**
-     * @param array $data
+     * @param Oadtz\Checkout\PaymentInfo $data
      * 
      * @return Oadtz\Checkout\PaymentResult
      */
-    public function authorise(array $paymentData) {
-        $paymentData = array_merge($this->paymentData, $paymentData);
+    public function authorise(PaymentInfo $paymentInfo) {
+        $paymentData = [
+            "card"  => [
+                "number"            => $paymentInfo->getCardNumber(),
+                "expirationDate"    => $paymentInfo->getCardExpiryDate()->format('m/Y'),
+                "cvv"               => $paymentInfo->getCardCVV()
+            ],
+            "amount"                => $paymentInfo->getAmount(),
+            "paymentMethodNonce"    => $paymentInfo->getSupplementData()['paymentMethodNonce'] ?? null,
+            "options"               => $paymentInfo->getSupplementData()['options'] ?? []
+        ];
         try {
             $response = $this->service->transaction()->sale($paymentData);
 

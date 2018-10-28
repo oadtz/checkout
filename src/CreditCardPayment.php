@@ -1,7 +1,7 @@
 <?php
 namespace Oadtz\Checkout;
 
-use Oadtz\Checkout\{AdyenClient, BraintreeClient};
+use Oadtz\Checkout\{AdyenClient, BraintreeClient, PaymentInfo};
 use Oadtz\Checkout\Interfaces\{PaymentInterface, PaymentClientInterface};
 
 class CreditCardPayment implements PaymentInterface {
@@ -17,24 +17,15 @@ class CreditCardPayment implements PaymentInterface {
     }
 
     /**
-     * @param array $config
-     */
-    public function setConfig (array $config)
-    {
-        //$this->adyenClient->setConfig($config['adyen']);
-        //$this->braintreeClient->setConfig($config['braintree']);
-    }
-
-    /**
-     * @param array $paymentData
+     * @param \Oadtz\Checkout\PaymentInfo $paymentInfo
      * 
      * @return \Oadtz\Checkout\PaymentResult
      */
-    public function pay (array $paymentData)
+    public function pay (PaymentInfo $paymentInfo)
     {
         $paymentClient = $this->braintreeClient;
-        $currency = $paymentData['currency'] ?? '';
-        $creditcardNo = $paymentData['creditcard_number'] ?? '';
+        $currency = $paymentInfo->getCurrency();
+        $creditcardNo = $paymentInfo->getCardNumber();
 
         if ($this->isAmex ($creditcardNo) && strtoupper($currency) != 'USD')
             throw new \Oadtz\Checkout\Exceptions\PaymentFailedException ('AMEX is possible to use only for USD');
@@ -42,7 +33,7 @@ class CreditCardPayment implements PaymentInterface {
         if ($this->isAmex ($creditcardNo) || in_array(strtoupper($currency), ['USD', 'EUR', 'AUD']))
             $paymentClient = $this->adyenClient;
 
-        return $this->authorise($paymentClient, $paymentData);
+        return $this->authorise($paymentClient, $paymentInfo);
     }
 
     /**
@@ -56,13 +47,14 @@ class CreditCardPayment implements PaymentInterface {
     }
 
     /**
-     * @param PaymentClientInterface $client, array $paymentData
+     * @param  \Oadtz\Checkout\Interfaces\PaymentClientInterface $client
+     * @param \Oadtz\Checkout\PaymentInfo $paymentInfo
      * 
      * @return \Oadtz\Checkout\PaymentStatus
      */
-    protected function authorise (PaymentClientInterface $client, array $paymentData) 
+    protected function authorise (PaymentClientInterface $client, PaymentInfo $paymentInfo) 
     {
-        return $client->authorise ($paymentData);
+        return $client->authorise ($paymentInfo);
     }
 
 }

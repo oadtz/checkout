@@ -2,28 +2,10 @@
 namespace Oadtz\Checkout;
 
 use Oadtz\Checkout\Interfaces\{ConfigInterface, PaymentClientInterface};
-use Oadtz\Checkout\PaymentResult;
+use Oadtz\Checkout\{PaymenrInfo, PaymentResult};
 
 class AdyenClient implements PaymentClientInterface {
     protected $config, $service;
-    protected $paymentData = [
-        "card"  => [
-            "number"        => null,
-            "expiryMonth"   => null,
-            "expiryYear"    => null,
-            "cvc"           => null,
-            "holderName"    => null
-        ],
-        "amount"            => [
-          "value"           => 0,
-          "currency"        => "USD"
-        ],
-        "reference"         => null,
-        "merchantAccount"   => null,
-        "additionalData"    =>  [
-            "card.encrypted.json" =>  null
-        ]
-    ];
 
     /**
      * @param ConfigInterface $defaultConfig
@@ -56,14 +38,32 @@ class AdyenClient implements PaymentClientInterface {
     }
 
     /**
-     * @param array $data
+     * @param Oadtz\Checkout\PaymentInfo $paymentInfo
      * 
      * @return Oadtz\Checkout\PaymentResult
      */
-    public function authorise(array $paymentData) {
-        $paymentData = array_merge($this->paymentData, $paymentData);
+    public function authorise(PaymentInfo $paymentInfo) {
+        $paymentData = [
+            "card"  => [
+                "number"        => $paymentInfo->getCardNumber() ,
+                "expiryMonth"   => $paymentInfo->getCardExpiryDate()->format('m'),
+                "expiryYear"    => $paymentInfo->getCardExpiryDate()->format('Y'),
+                "cvc"           => $paymentInfo->getCardCVV(),
+                "holderName"    => $paymentInfo->getCardHolderName()
+            ],
+            "amount"            => [
+            "value"           => $paymentInfo->getAmount(),
+            "currency"        => $paymentInfo->getCurrency()
+            ],
+            "reference"         => $paymentInfo->getSupplementData()['reference'] ?? '',
+            "merchantAccount"   => $paymentInfo->getSupplementData()['merchantAccount'] ?? '',
+            "additionalData"    =>  $paymentInfo->getSupplementData()['additionalData'] ?? [
+                "card.encrypted.json" =>  null
+            ]
+        ];
+
         try {
-            $response = $this->service->authorise($data);
+            $response = $this->service->authorise($paymentData);
 
             // This is for storing result from payment gateway API and the class did not implement from any interface so I am not dependency injecting here
             return new PaymentResult([

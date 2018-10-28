@@ -23,18 +23,22 @@ class BraintreeClientTest extends TestCase
 
     public function testPay()
     {
-        $paymentData = [
-            "card"  => [
-                "number"            => "4111111111111111",
-                "expirationDate"    => "10/2022",
-                "cvv"               => "737"
-            ],
-            "amount"            => "10.00",
-            "paymentMethodNonce" => "nonceFromTheClient",
-            "options" => [
-              "submitForSettlement" => True
+        $paymentInfo = Mockery::mock('\Oadtz\Checkout\PaymentInfo');
+        $paymentInfo->shouldReceive([
+            'getCardNumber'         => '4111111111111111', 
+            'getCardExpiryDate'     =>  new \DateTime('2020-01-01'), 
+            'getCardCVV'            =>  '737', 
+            'getCardHolderName'     =>  'John Smith', 
+            'getAmount'             =>  100.00, 
+            'getCurrency'           =>  'EUR', 
+            'getSupplementData'     => [
+                "paymentMethodNonce"         => null,
+                "options" => [
+                  "submitForSettlement" => True
+                ]
             ]
-        ];
+        ]);
+        $paymentInfo->shouldReceive('getCardNumber');
 
         // Test successful CC authorisation
         $braintreeService = Mockery::mock('Braintree\Gateway');
@@ -45,7 +49,7 @@ class BraintreeClientTest extends TestCase
                 ]);
         $this->client->setBraintreePaymentService($braintreeService);
 
-        $result = $this->client->authorise($paymentData);
+        $result = $this->client->authorise($paymentInfo);
 
 
         $this->assertInstanceOf(\Oadtz\Checkout\PaymentResult::class, $result);
@@ -63,7 +67,7 @@ class BraintreeClientTest extends TestCase
                 ]);
         $this->client->setBraintreePaymentService($braintreeService);
 
-        $result = $this->client->authorise($paymentData);
+        $result = $this->client->authorise($paymentInfo);
 
         $this->assertInstanceOf(\Oadtz\Checkout\PaymentResult::class, $result);
         $this->assertFalse($result->getSuccess(), 'Success flag should be false.');
@@ -76,6 +80,6 @@ class BraintreeClientTest extends TestCase
         $this->client->setBraintreePaymentService($braintreeService);
 
         $this->expectException(\Oadtz\Checkout\Exceptions\PaymentFailedException::class);
-        $result = $this->client->authorise($paymentData);
+        $result = $this->client->authorise($paymentInfo);
     }
 }

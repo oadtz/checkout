@@ -31,65 +31,55 @@ class CreditCardPaymentTest extends TestCase
 
     public function testPayWithAdyen ()
     {
-        $result = $this->payment->pay ([
-            'currency'                  =>  'USD',
-            'creditcard_number'         =>  '371449635398431', //Amex
-            'creditcard_expiry_month'   =>  '09',
-            'creditcard_expiry_year'    =>  '2022',
-            'creditcard_cvv'            =>  '737',
-            'creditcard_holder_name'    =>  'John Wick'
+        $paymentInfo = Mockery::mock('Oadtz\Checkout\PaymentInfo');
+        $paymentInfo->shouldReceive([
+            'getCardNumber'     =>  '371449635398431', //Amex
+            'getCurrency'       =>  'USD'
         ]);
+        $result = $this->payment->pay ($paymentInfo);
         
         $this->assertInstanceOf(\Oadtz\Checkout\PaymentResult::class, $result);
         $this->assertEquals('adyen', $result->getPaymentGateway());
 
 
-        $result = $this->payment->pay ([
-            'currency'                  =>  'USD',
-            'creditcard_number'         =>  '6011527312385806', //Discover
-            'creditcard_expiry_month'   =>  '09',
-            'creditcard_expiry_year'    =>  '2022',
-            'creditcard_cvv'            =>  '737',
-            'creditcard_holder_name'    =>  'John Wick'
+        $paymentInfo = Mockery::mock('Oadtz\Checkout\PaymentInfo');
+        $paymentInfo->shouldReceive([
+            'getCardNumber'     =>  '6011527312385806', //Discover
+            'getCurrency'       =>  'USD'
         ]);
+        $result = $this->payment->pay ($paymentInfo);
         
         $this->assertEquals('adyen', $result->getPaymentGateway());
 
 
-        $result = $this->payment->pay ([
-            'currency'                  =>  'EUR',
-            'creditcard_number'         =>  '6011527312385806', //Discover
-            'creditcard_expiry_month'   =>  '09',
-            'creditcard_expiry_year'    =>  '2022',
-            'creditcard_cvv'            =>  '737',
-            'creditcard_holder_name'    =>  'John Wick'
+        $paymentInfo = Mockery::mock('Oadtz\Checkout\PaymentInfo');
+        $paymentInfo->shouldReceive([
+            'getCardNumber'     =>  '6011527312385806', //Discover
+            'getCurrency'       =>  'EUR'
         ]);
+        $result = $this->payment->pay ($paymentInfo);
         
         $this->assertEquals('adyen', $result->getPaymentGateway());
 
 
-        $result = $this->payment->pay ([
-            'currency'                  =>  'AUD',
-            'creditcard_number'         =>  '6011527312385806', //Discover
-            'creditcard_expiry_month'   =>  '09',
-            'creditcard_expiry_year'    =>  '2022',
-            'creditcard_cvv'            =>  '737',
-            'creditcard_holder_name'    =>  'John Wick'
+        $paymentInfo = Mockery::mock('Oadtz\Checkout\PaymentInfo');
+        $paymentInfo->shouldReceive([
+            'getCardNumber'     =>  '6011527312385806', //Discover
+            'getCurrency'       =>  'AUD'
         ]);
+        $result = $this->payment->pay ($paymentInfo);
         
         $this->assertEquals('adyen', $result->getPaymentGateway());
     }
 
     public function testPayWithBraintree ()
     {
-        $result = $this->payment->pay ([
-            'currency'                  =>  'THB',
-            'creditcard_number'         =>  '6011527312385806', //Discover
-            'creditcard_expiry_month'   =>  '09',
-            'creditcard_expiry_year'    =>  '2022',
-            'creditcard_cvv'            =>  '737',
-            'creditcard_holder_name'    =>  'John Wick'
+        $paymentInfo = Mockery::mock('Oadtz\Checkout\PaymentInfo');
+        $paymentInfo->shouldReceive([
+            'getCardNumber'     =>  '6011527312385806', //Discover
+            'getCurrency'       =>  'THB'
         ]);
+        $result = $this->payment->pay ($paymentInfo);
         
         $this->assertInstanceOf(\Oadtz\Checkout\PaymentResult::class, $result);
         $this->assertEquals('braintree', $result->getPaymentGateway());
@@ -98,13 +88,11 @@ class CreditCardPaymentTest extends TestCase
     public function testPayWithAmexAndNonUSD ()
     {
         $this->expectException(\Oadtz\Checkout\Exceptions\PaymentFailedException::class);
-        $result = $this->payment->pay ([
-            'currency'                  =>  'THB',
-            'creditcard_number'         =>  '371449635398431', //Amex
-            'creditcard_expiry_month'   =>  '09',
-            'creditcard_expiry_year'    =>  '2022',
-            'creditcard_cvv'            =>  '737',
-            'creditcard_holder_name'    =>  'John Wick'
+        $paymentInfo = Mockery::mock('Oadtz\Checkout\PaymentInfo');
+        $paymentInfo->shouldReceive([
+            'getCardNumber'     =>  '371449635398431', //Amex
+            'getCurrency'       =>  'THB'
         ]);
+        $result = $this->payment->pay ($paymentInfo);
     }
 }

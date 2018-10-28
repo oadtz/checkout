@@ -13,7 +13,6 @@ class CheckoutTest extends TestCase
     {
         parent::setUp ();
 
-
         $ccPayment = Mockery::mock('Oadtz\Checkout\Interfaces\PaymentInterface');
         $ccPayment->shouldReceive('pay')
                   ->andReturn(new \Oadtz\Checkout\PaymentResult());
@@ -22,8 +21,8 @@ class CheckoutTest extends TestCase
 
     public function testProcessPayment ()
     {
-        $paymentData = [];
-        $result = $this->checkout->processPayment($paymentData);
+        $paymentInfo = Mockery::mock('Oadtz\Checkout\PaymentInfo');
+        $result = $this->checkout->processPayment($paymentInfo);
 
         $this->assertInstanceOf(\Oadtz\Checkout\PaymentResult::class, $result);
     }

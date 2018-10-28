@@ -1,8 +1,10 @@
 <?php
 namespace Oadtz\Checkout\Interfaces;
 
+use Oadtz\Checkout\PaymentInfo;
+
 interface CheckoutInterface
 {
-    public function __construct (PaymentInterface $paymant);
-    public function processPayment(array $paymentData);
+    public function __construct (PaymentInterface $payment);
+    public function processPayment(PaymentInfo $paymentInfo);
 }

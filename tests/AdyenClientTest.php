@@ -21,21 +21,22 @@ class AdyenClientTest extends TestCase
 
     public function testPay()
     {
-        $paymentData = [
-            "card"  => [
-                "number"        => "4111111111111111",
-                "expiryMonth"   => "10",
-                "expiryYear"    => "2022",
-                "cvc"           => "737",
-                "holderName"    => "John Smith"
-            ],
-            "amount"            => [
-              "value"           => 1500,
-              "currency"        => "EUR"
-            ],
-            "reference"         => "MY_REFERENCE",
-            "merchantAccount"   => "MY_MERCHANT_ACCOUNT"
-        ];
+        $paymentInfo = Mockery::mock('\Oadtz\Checkout\PaymentInfo');
+        $paymentInfo->shouldReceive([
+            'getCardNumber'         => '4111111111111111', 
+            'getCardExpiryDate'     =>  new \DateTime('2020-01-01'), 
+            'getCardCVV'            =>  '737', 
+            'getCardHolderName'     =>  'John Smith', 
+            'getAmount'             =>  100.00, 
+            'getCurrency'           =>  'EUR', 
+            'getSupplementData'     => [
+                "reference"         => "MY_REFERENCE",
+                "merchantAccount"   => "MY_MERCHANT_ACCOUNT",
+                "additionalData"    =>  [
+                    "card.encrypted.json" =>  null
+                ]
+            ]
+        ]);
 
         // Test successful CC authorisation
         $adyenService = Mockery::mock('Adyen\Service\Payment');
@@ -48,7 +49,7 @@ class AdyenClientTest extends TestCase
                 ]);
         $this->client->setAdyenPaymentService($adyenService);
 
-        $result = $this->client->authorise($paymentData);
+        $result = $this->client->authorise($paymentInfo);
 
 
         $this->assertInstanceOf(\Oadtz\Checkout\PaymentResult::class, $result);
@@ -70,7 +71,7 @@ class AdyenClientTest extends TestCase
                 ]);
         $this->client->setAdyenPaymentService($adyenService);
         
-        $result = $this->client->authorise($paymentData);
+        $result = $this->client->authorise($paymentInfo);
 
         $this->assertInstanceOf(\Oadtz\Checkout\PaymentResult::class, $result);
         $this->assertFalse($result->getSuccess(), 'Success flag should be false.');
@@ -83,6 +84,6 @@ class AdyenClientTest extends TestCase
         $this->client->setAdyenPaymentService($adyenService);
 
         $this->expectException(\Oadtz\Checkout\Exceptions\PaymentFailedException::class);
-        $result = $this->client->authorise($paymentData);
+        $result = $this->client->authorise($paymentInfo);
     }
 }

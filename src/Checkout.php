@@ -2,6 +2,7 @@
 namespace Oadtz\Checkout;
 
 use Oadtz\Checkout\Interfaces\{ConfigInterface, CheckoutInterface, PaymentInterface};
+use Oadtz\Checkout\PaymentInfo;
 
 class Checkout implements CheckoutInterface
 {
@@ -16,13 +17,13 @@ class Checkout implements CheckoutInterface
     }
 
     /**
-     * @param array $paymentData
+     * @param Oadtz\Checkout\PaymentInfo $paymentInfo
      *
      * @return  string
      */
-    public function processPayment(array $paymentData)
+    public function processPayment(PaymentInfo $paymentInfo)
     {
-        return $this->payment->pay($paymentData);
+        return $this->payment->pay($paymentInfo);
     }
 
 }
