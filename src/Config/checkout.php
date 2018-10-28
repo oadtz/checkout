@@ -9,9 +9,9 @@ return [
     ],
     'braintree' =>  [
         'environment'   => 'sandbox',
-        'merchantId'    => '',
-        'publicKey'     => '',
-        'privateKey'    => ''
+        'merchant_id'    => '',
+        'public_key'     => '',
+        'private_key'    => ''
     ]
 
 ];
