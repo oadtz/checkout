@@ -45,6 +45,22 @@ class PaymentInfo {
     }
 
     /**
+     * @param string $cvv
+     */
+    public function setCardCVV (string $cvv)
+    {
+        $this->paymentData['card_cvv'] = $cvv;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCardCVV ()
+    {
+        return $this->paymentData['card_cvv'];
+    }
+
+    /**
      * @param DateTime $date
      */
     public function setCardExpiryDate (\DateTime $date)

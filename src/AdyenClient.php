@@ -52,8 +52,8 @@ class AdyenClient implements PaymentClientInterface {
                 "holderName"    => $paymentInfo->getCardHolderName()
             ],
             "amount"            => [
-            "value"           => $paymentInfo->getAmount(),
-            "currency"        => $paymentInfo->getCurrency()
+                "value"           => $paymentInfo->getAmount(),
+                "currency"        => $paymentInfo->getCurrency()
             ],
             "reference"         => $paymentInfo->getSupplementData()['reference'] ?? '',
             "merchantAccount"   => $paymentInfo->getSupplementData()['merchantAccount'] ?? '',

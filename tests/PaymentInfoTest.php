@@ -33,6 +33,13 @@ class PaymentInfoTest extends TestCase {
         $this->assertEquals ($input, $this->paymentInfo->getCardNumber($input));
     }
 
+    public function testGetSetCardCVV ()
+    {
+        $input = '232';
+        $this->paymentInfo->setCardCVV($input);
+        $this->assertEquals ($input, $this->paymentInfo->getCardCVV($input));
+    }
+
     public function testGetSetCardExpiryDate ()
     {
         $input = new \DateTime('2020-01-01');
