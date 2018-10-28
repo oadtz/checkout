@@ -5,14 +5,24 @@ use Oadtz\Checkout\Interfaces\{ConfigInterface, CheckoutInterface, PaymentInterf
 
 class Checkout implements CheckoutInterface
 {
+    protected $payment;
+
+    /**
+     * @param Oadtz\Checkout\Interfaces\PaymentInterface $payment
+     */
+    public function __construct (PaymentInterface $payment)
+    {
+        $this->payment = $payment;
+    }
+
     /**
      * @param array $paymentData
      *
      * @return  string
      */
-    public function processPayment(PaymentInterface $payment, array $paymentData)
+    public function processPayment(array $paymentData)
     {
-        return $payment->pay($paymentData);
+        return $this->payment->pay($paymentData);
     }
 
 }

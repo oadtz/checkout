@@ -15,7 +15,9 @@ class BraintreeClientTest extends TestCase
 
         $defaultConfig = Mockery::mock('\Oadtz\Checkout\Interfaces\ConfigInterface');
         $defaultConfig->shouldReceive('get')
-                      ->andReturn([]);
+                      ->andReturn([
+                        'environment'       =>  'sandbox'
+                      ]);
         $this->client = new BraintreeClient($defaultConfig, []);
     }
 
@@ -23,29 +25,25 @@ class BraintreeClientTest extends TestCase
     {
         $paymentData = [
             "card"  => [
-                "number"        => "4111111111111111",
-                "expiryMonth"   => "10",
-                "expiryYear"    => "2022",
-                "cvc"           => "737",
-                "holderName"    => "John Smith"
+                "number"            => "4111111111111111",
+                "expirationDate"    => "10/2022",
+                "cvv"               => "737"
             ],
-            "amount"            => [
-              "value"           => 1500,
-              "currency"        => "EUR"
-            ],
-            "reference"         => "MY_REFERENCE",
-            "merchantAccount"   => "MY_MERCHANT_ACCOUNT"
+            "amount"            => "10.00",
+            "paymentMethodNonce" => "nonceFromTheClient",
+            "options" => [
+              "submitForSettlement" => True
+            ]
         ];
 
         // Test successful CC authorisation
-        $adyenService = Mockery::mock('Adyen\Service\Payment');
-        $adyenService->shouldReceive('authorise')
+        $braintreeService = Mockery::mock('Braintree\Gateway');
+        $braintreeService->shouldReceive('transaction->sale')
                 ->once()
-                ->andReturn([
-                    'pspReference'      =>  '8515405668712188',
-                    'resultCode'        =>  'Authorised',
-                    'authCode'          =>  '56065'
+                ->andReturn((object)[
+                    'success'      =>  true
                 ]);
+        $this->client->setBraintreePaymentService($braintreeService);
 
         $result = $this->client->authorise($paymentData);
 
@@ -57,16 +55,13 @@ class BraintreeClientTest extends TestCase
 
 
         // Test failure CC authorisation
-        $adyenService = Mockery::mock('Adyen\Service\Payment');
-        $adyenService->shouldReceive('authorise')
+        $braintreeService = Mockery::mock('Braintree\Gateway');
+        $braintreeService->shouldReceive('transaction->sale')
                 ->once()
-                ->andReturn([
-                    'status'            =>  422,
-                    'errorCode'         =>  101,
-                    'message'           =>  'Invalid card number',
-                    'errorType'         =>  'validation',
-                    'pspReference'      =>  '8815405669507360'
+                ->andReturn((object)[
+                    'success'   =>  false
                 ]);
+        $this->client->setBraintreePaymentService($braintreeService);
 
         $result = $this->client->authorise($paymentData);
 
@@ -74,10 +69,11 @@ class BraintreeClientTest extends TestCase
         $this->assertFalse($result->getSuccess(), 'Success flag should be false.');
 
         // Test unknow error
-        $adyenService = Mockery::mock('Adyen\Service\Payment');
-        $adyenService->shouldReceive('authorise')
+        $braintreeService = Mockery::mock('Braintree\Gateway');
+        $braintreeService->shouldReceive('transaction->sale')
                 ->once()
                 ->andThrow(\Exception::class);
+        $this->client->setBraintreePaymentService($braintreeService);
 
         $this->expectException(\Oadtz\Checkout\Exceptions\PaymentFailedException::class);
         $result = $this->client->authorise($paymentData);

@@ -4,11 +4,14 @@ return [
     'adyen' => [
         'username'      =>  '',
         'password'      =>  '',
-        'environment'   =>  'test', // test, live
+        'environment'   =>  'test',
         'appname'       =>  ''
     ],
     'braintree' =>  [
-        
+        'environment'   => 'sandbox',
+        'merchantId'    => '',
+        'publicKey'     => '',
+        'privateKey'    => ''
     ]
 
 ];
