@@ -51,11 +51,10 @@ class BraintreeClient implements PaymentClientInterface {
                 "expirationDate"    => $paymentInfo->getCardExpiryDate()->format('m/Y'),
                 "cvv"               => $paymentInfo->getCardCVV()
             ],
-            "amount"                => $paymentInfo->getAmount(),
-            "options"               => $paymentInfo->getSupplementData()['options'] ?? [
-                'submitForSettlement' => True
-            ]
+            "amount"                => $paymentInfo->getAmount()
         ];
+        if (isset($paymentInfo->getSupplementData()['options']))
+            $paymentData["options"] = $paymentInfo->getSupplementData()['options'];
         if (isset($paymentInfo->getSupplementData()['paymentMethodNonce']))
             $paymentData["paymentMethodNonce"] = $paymentInfo->getSupplementData()['paymentMethodNonce'];
 
