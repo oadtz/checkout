@@ -76,7 +76,7 @@ class CheckoutServiceProvider extends ServiceProvider
     {
         // When users execute Laravel's vendor:publish command, the config file will be copied to the specified location
         $this->publishes([
-            __DIR__ . '/Config/checkout.php' => config_path('checkout.php'),
+            __DIR__ . '/../Config/checkout.php' => config_path('checkout.php'),
         ]);
     }
 
