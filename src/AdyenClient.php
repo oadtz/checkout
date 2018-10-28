@@ -56,7 +56,7 @@ class AdyenClient implements PaymentClientInterface {
                 "currency"        => $paymentInfo->getCurrency()
             ],
             "reference"         => $paymentInfo->getSupplementData()['reference'] ?? '',
-            "merchantAccount"   => $this->config['merchantAccount'],
+            "merchantAccount"   => $this->config['merchant_account'],
             "additionalData"    =>  $paymentInfo->getSupplementData()['additionalData'] ?? [
                 "card.encrypted.json" =>  null
             ]
