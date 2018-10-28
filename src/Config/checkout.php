@@ -5,7 +5,8 @@ return [
         'username'      =>  '',
         'password'      =>  '',
         'environment'   =>  'test',
-        'appname'       =>  ''
+        'appname'       =>  '',
+        'merchant_account' => ''
     ],
     'braintree' =>  [
         'environment'   => 'sandbox',
