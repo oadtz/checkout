@@ -45,15 +45,20 @@ class BraintreeClient implements PaymentClientInterface {
      */
     public function authorise(PaymentInfo $paymentInfo) {
         $paymentData = [
-            "card"  => [
+            "creditCard"  => [
+                "cardholderName"    => $paymentInfo->getCardHolderName(),
                 "number"            => $paymentInfo->getCardNumber(),
                 "expirationDate"    => $paymentInfo->getCardExpiryDate()->format('m/Y'),
                 "cvv"               => $paymentInfo->getCardCVV()
             ],
             "amount"                => $paymentInfo->getAmount(),
-            "paymentMethodNonce"    => $paymentInfo->getSupplementData()['paymentMethodNonce'] ?? null,
-            "options"               => $paymentInfo->getSupplementData()['options'] ?? []
+            "options"               => $paymentInfo->getSupplementData()['options'] ?? [
+                'submitForSettlement' => True
+            ]
         ];
+        if (isset($paymentInfo->getSupplementData()['paymentMethodNonce']))
+            $paymentData["paymentMethodNonce"] = $paymentInfo->getSupplementData()['paymentMethodNonce'];
+
         try {
             $response = $this->service->transaction()->sale($paymentData);
 
