@@ -34,6 +34,15 @@ class Checkout implements CheckoutInterface
         $this->paymentInfo->setCardNumber ($ccNo);
     }
 
+
+    /**
+     * @param string $cvv
+     */
+    public function setCardCVV (string $cvv)
+    {
+        $this->paymentInfo->setCardCVV ($cvv);
+    }
+
     /**
      * @param DateTime $date
      */
