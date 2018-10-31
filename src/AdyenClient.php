@@ -2,7 +2,7 @@
 namespace Oadtz\Checkout;
 
 use Oadtz\Checkout\Interfaces\{ConfigInterface, PaymentClientInterface};
-use Oadtz\Checkout\{PaymenrInfo, PaymentResult};
+use Oadtz\Checkout\{PaymentInfo, PaymentResult};
 
 class AdyenClient implements PaymentClientInterface {
     protected $config, $service;
